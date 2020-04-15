@@ -21,7 +21,6 @@ class Header extends Component{
     headerSubmitHandler = (e) => {
         e.preventDefault();
         this.props.whatToSearch(this.state.selectedOption, e.target.name.value);
-        console.log("Header handler odpalony");
     };
 
     clearButtonHandler = (e) => {
