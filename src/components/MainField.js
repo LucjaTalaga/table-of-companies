@@ -4,35 +4,31 @@ import getDataFromAPI from '../api/GetDataFromAPI';
 class MainField extends Component{
 
     state = {
-        companiesData: null
+        companiesData: null,
+        sortedBy: null,
+        filteredData: null
     };
 
     loadAllCompaniesData = () => {
         getDataFromAPI('companies').then(companies => {
-            //console.log('Pokaż firmy:', companies);
             companies.sort((a, b) => {
                 return a.id - b.id;
             });
             this.getCompaniesIncome(companies).then(companies => {
-                console.log(companies[0].total_income);
                 this.setState({
-                    companiesData: companies
+                    companiesData: companies,
+                    sortedBy: 'id',
+                    filteredData: companies
                 });
-                console.log(this.state.companiesData[0].total_income);
             });
         })
     };
 
     getCompaniesIncome = async (companies) => {
             let companiesUpdate = companies;
-            console.log(companiesUpdate);
             let urls = [];
                companies.forEach( company=> {
                urls.push(`incomes/${company.id}`);
-            //getDataFromAPI(`incomes/${company.id}`).then(income => {
-            //company.total_income = this.countTotalIncome(income.incomes);
-            //company.average_income = this.countAverageIncome(income.incomes);
-            //company.last_month_income = this.countLastMonthIncome(income.incomes);
             });
             let requests = urls.map(url => getDataFromAPI(url));
             await Promise.all(requests)
@@ -43,7 +39,6 @@ class MainField extends Component{
                         companiesUpdate[index].last_month_income = this.countLastMonthIncome(income.incomes);
                     }
                 ));
-              console.log(urls);
               return companiesUpdate;
     };
 
@@ -59,19 +54,61 @@ class MainField extends Component{
         return parseFloat((this.countTotalIncome(incomes)/incomes.length).toFixed(2));
     };
 
-    countLastMonthIncome = (income) => {
-        return 10;
+    countLastMonthIncome = (incomes) => {
+        let lastMonthIncomes = [...incomes];
+        let recentData = 0;
+        lastMonthIncomes.forEach( income => {
+            let yearAndMonth = Number(income.date.substr(0,7).replace("-", ""));
+            if(yearAndMonth > recentData){
+                recentData = yearAndMonth;
+            }
+        });
+        lastMonthIncomes = lastMonthIncomes.filter( income => {
+            return recentData === Number(income.date.substr(0,7).replace("-", ""));
+        });
+        return this.countTotalIncome(lastMonthIncomes);
     };
 
     dataSort = (e, dataType) => {
-        console.log("Będzie sortowańsko po "+dataType);
+        const companiesToSort = [...this.state.filteredData];
+        let sorted = this.state.sortedBy;
+        if(dataType==='name' || dataType==='city'){
+            if(sorted === dataType){
+                companiesToSort.sort((a, b) => {
+                    return b[`${dataType}`].localeCompare(a[`${dataType}`]);
+                });
+                sorted = "-"+dataType;
+            }
+            else{
+                companiesToSort.sort((a, b) => {
+                    return a[`${dataType}`].localeCompare(b[`${dataType}`]);
+                });
+                sorted = dataType;
+            }
+        }
+        else {
+            if(sorted === dataType){
+                companiesToSort.sort((a, b) => {
+                    return b[`${dataType}`] - a[`${dataType}`];
+                });
+                sorted = "-"+dataType;
+            }
+            else{
+                companiesToSort.sort((a, b) => {
+                    return a[`${dataType}`] - b[`${dataType}`];
+                });
+                sorted = dataType;
+            }
+        }
+        this.setState({
+            filteredData: companiesToSort,
+            sortedBy: sorted
+        });
     };
 
     createTableContent = (data) => {
         return data.map( company => {
             const { id, name, city, total_income, average_income, last_month_income } = company;
-            console.log(total_income);
-            console.log(name);
             return (
                 <tr key={id}>
                     <td>{id}</td>
@@ -85,8 +122,27 @@ class MainField extends Component{
         });
     };
 
+    filterData = (phrase, dataType) => {
+        let newFilteredData = [...this.state.companiesData];
+        if(phrase) {
+            newFilteredData = newFilteredData.filter((element) => {
+                return String(element[`${dataType}`]).includes(phrase);
+            });
+        }
+        this.setState({
+           filteredData: newFilteredData
+        });
+    };
+
     componentDidMount() {
         this.loadAllCompaniesData();
+    }
+
+    componentDidUpdate(prevProps) {
+        const {searchedPhrase, askType} = this.props;
+        if(searchedPhrase !== prevProps.searchedPhrase || askType !== prevProps.askType){
+            this.filterData(searchedPhrase, askType);
+        }
     }
 
     render() {
@@ -96,26 +152,23 @@ class MainField extends Component{
             )
         }
         else {
-            console.log(this.state.companiesData);
             return (
-                <section>
-                    <p>Pytanie o: {this.props.askType}, szukana fraza: {this.props.searchedPhrase}</p>
-                    <table>
+                <section className="mainField flex-box">
+                    <table id="companies">
                         <thead>
                             <tr>
                                 <th onClick={e => this.dataSort(e, 'id')}>id</th>
-                                <th onClick={e => this.dataSort(e, 'name')}>name</th>
-                                <th onClick={e => this.dataSort(e, 'city')}>city</th>
-                                <th onClick={e => this.dataSort(e, 'total_income')}>total income</th>
-                                <th onClick={e => this.dataSort(e, 'average_income')}>average income</th>
-                                <th onClick={e => this.dataSort(e, 'last_month_income')}>last month income</th>
+                                <th onClick={e => this.dataSort(e, 'name')}>Name</th>
+                                <th onClick={e => this.dataSort(e, 'city')}>City</th>
+                                <th onClick={e => this.dataSort(e, 'total_income')}>Total income</th>
+                                <th onClick={e => this.dataSort(e, 'average_income')}>Average income</th>
+                                <th onClick={e => this.dataSort(e, 'last_month_income')}>Last month income</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {this.createTableContent(this.state.companiesData)}
+                            {this.createTableContent(this.state.filteredData)}
                         </tbody>
                     </table>
-                    <p>Total income: {this.state.companiesData[0].total_income}</p>
                 </section>
             )
         }

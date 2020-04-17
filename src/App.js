@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import './App.css';
+import './scss/main.scss';
 import Header from "./components/Header";
 import MainField from "./components/MainField";
 

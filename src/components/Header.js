@@ -36,9 +36,12 @@ class Header extends Component{
                 <form className='flex-box' onSubmit={this.headerSubmitHandler}>
                     <label> Find the company by:
                         <select name="ko" value={this.state.selectedOption} onChange={this.changeHandler}>
-                            <option value='name'>name</option>
-                            <option value='city'>city</option>
-                            <option value='total income'>total income</option>
+                            <option value='name'>Name</option>
+                            <option value='id'>id</option>
+                            <option value='city'>City</option>
+                            <option value='total_income'>Total income</option>
+                            <option value='average_income'>Average income</option>
+                            <option value='last_month_income'>Last month income</option>
                         </select>
                         <input type="text" name="name" value={this.state.searchedPhrase} onChange={this.inputHandler} />
                     </label>

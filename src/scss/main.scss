@@ -1,5 +1,7 @@
-@import "./settings/_reset.scss";
 @import "./settings/_fonts.scss";
+@import "./settings/_reset.scss";
+@import "./elements/header.scss";
+@import "./elements/mainField.scss";
 
 *{
   box-sizing: border-box;
