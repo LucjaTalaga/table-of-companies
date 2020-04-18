@@ -6,6 +6,10 @@ class Header extends Component{
         selectedOption: 'name',
         searchedPhrase: ''
     };
+    /**
+     * changes the chosen value in select, by which the data will be filtered
+     * @param   {string} e  event
+     */
     changeHandler = (e) => {
         this.setState({
             selectedOption: e.target.value
