@@ -1,0 +1,15 @@
+footer{
+  width: 100vw;
+  height: 15vh;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(250,250,210, 0.8);
+  min-height: 91.5px;
+  p{
+    color: #1f421f;
+    font-family: $font-alt;
+    font-size: 19px;
+    margin-bottom: 2vh;
+  }
+}

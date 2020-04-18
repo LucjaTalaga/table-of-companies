@@ -34,7 +34,7 @@ class Header extends Component{
             <header>
                 <h1>Companies table</h1>
                 <form className='flex-box' onSubmit={this.headerSubmitHandler}>
-                    <label> Find the company by:
+                    <label> <span> Find the company by: </span>
                         <select name="ko" value={this.state.selectedOption} onChange={this.changeHandler}>
                             <option value='name'>Name</option>
                             <option value='id'>id</option>

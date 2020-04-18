@@ -1,7 +1,8 @@
 @import "./settings/_fonts.scss";
 @import "./settings/_reset.scss";
 @import "./elements/header.scss";
-@import "./elements/mainField.scss";
+@import "elements/table";
+@import "elements/footer";
 
 *{
   box-sizing: border-box;

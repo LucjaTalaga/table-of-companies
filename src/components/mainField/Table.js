@@ -89,7 +89,7 @@ class Table extends Component{
                         </tbody>
                     </table>
                     <div className='pageNumbers'>
-                        {this.getPages(companies).map(el => <button onClick={e => this.pagesButtonHandler(e, el)} className={ this.state.page === el ? 'activeButton': '' }>{el}</button>)}
+                        {this.getPages(companies).map(el => <button key={el} onClick={e => this.pagesButtonHandler(e, el)} className={ this.state.page === el ? 'activeButton': '' }>{el}</button>)}
                     </div>
                 </section>
             )

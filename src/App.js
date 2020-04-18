@@ -3,6 +3,7 @@ import './App.css';
 import './scss/main.scss';
 import Header from "./components/Header";
 import MainField from "./components/mainField/MainField";
+import Footer from "./components/Footer";
 
 class App extends Component {
   constructor(props) {
@@ -25,6 +26,7 @@ class App extends Component {
         <>
           <Header whatToSearch={this.whatToSearch}/>
           <MainField askType={this.state.askType} searchedPhrase={this.state.searchedPhrase}/>
+          <Footer/>
         </>
     );
   }
