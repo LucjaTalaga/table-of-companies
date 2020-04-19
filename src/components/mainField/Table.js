@@ -2,18 +2,32 @@ import React, {Component} from "react";
 
 const COMPANIES_PER_PAGE = 50;
 
+/**
+ * A component that creates Table
+ */
 class Table extends Component{
 
     state = {
         page: 1
     };
 
+    /**
+     * method that changes the number of page, that is stored in state of component
+     * @method
+     * @param {string} e event
+     * @param {num} num number of page
+     */
     pagesButtonHandler = (e, num) => {
         this.setState({
             page: num
         });
     };
-
+    /**
+     * method that counts number of pages and creates an array of number that equals number of pages
+     * @method
+     * @param {array} companies an array of data about companies
+     * @return {array} an array with page numbers
+     */
     getPages = (companies) => {
         let numberOfPages = (companies.length%COMPANIES_PER_PAGE===0) ? companies.length/COMPANIES_PER_PAGE :
             (Math.floor(companies.length/COMPANIES_PER_PAGE))+1;
@@ -26,6 +40,12 @@ class Table extends Component{
         return pages;
     };
 
+    /**
+     * method that gets complete array of companies and returns only those that will be shown on one page
+     * @method
+     * @param {array} data an array of data about companies
+     * @return {array} data about companies that will be shown on one page
+     */
     getActualPageContent = (data) => {
         const {page} = this.state;
         let actualPageData = [];
@@ -38,6 +58,12 @@ class Table extends Component{
         return actualPageData;
     };
 
+    /**
+     * method that creates a JSX element - table rows with companies data
+     * @method
+     * @param {array} data an array of data about companies
+     * @return {JSX} table row with data
+     */
     createTableContent = (data) => {
         return data.map( company => {
             const { id, name, city, total_income, average_income, last_month_income } = company;

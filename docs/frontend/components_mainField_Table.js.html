@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/mainField/Table.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/mainField/Table.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, {Component} from "react";
+
+const COMPANIES_PER_PAGE = 50;
+
+/**
+ * A component that creates Table
+ */
+class Table extends Component{
+
+    state = {
+        page: 1
+    };
+
+    /**
+     * method that changes the number of page, that is stored in state of component
+     * @method
+     * @param {string} e event
+     * @param {num} num number of page
+     */
+    pagesButtonHandler = (e, num) => {
+        this.setState({
+            page: num
+        });
+    };
+    /**
+     * method that counts number of pages and creates an array of number that equals number of pages
+     * @method
+     * @param {array} companies an array of data about companies
+     * @return {array} an array with page numbers
+     */
+    getPages = (companies) => {
+        let numberOfPages = (companies.length%COMPANIES_PER_PAGE===0) ? companies.length/COMPANIES_PER_PAGE :
+            (Math.floor(companies.length/COMPANIES_PER_PAGE))+1;
+        let pages = [];
+        if(numberOfPages>1) {
+            for (let i = 0; i &lt; numberOfPages; i++) {
+                pages[i] = i + 1;
+            }
+        }
+        return pages;
+    };
+
+    /**
+     * method that gets complete array of companies and returns only those that will be shown on one page
+     * @method
+     * @param {array} data an array of data about companies
+     * @return {array} data about companies that will be shown on one page
+     */
+    getActualPageContent = (data) => {
+        const {page} = this.state;
+        let actualPageData = [];
+        for(let i=0; i&lt;COMPANIES_PER_PAGE; i++){
+            let actualCompany = data[(COMPANIES_PER_PAGE*(page - 1))+i];
+            if(actualCompany){
+                actualPageData.push(actualCompany);
+            }
+        }
+        return actualPageData;
+    };
+
+    /**
+     * method that creates a JSX element - table rows with companies data
+     * @method
+     * @param {array} data an array of data about companies
+     * @return {JSX} table row with data
+     */
+    createTableContent = (data) => {
+        return data.map( company => {
+            const { id, name, city, total_income, average_income, last_month_income } = company;
+            return (
+                &lt;tr key={id}>
+                    &lt;td>{id}&lt;/td>
+                    &lt;td>{name}&lt;/td>
+                    &lt;td>{city}&lt;/td>
+                    &lt;td>{total_income}&lt;/td>
+                    &lt;td>{average_income}&lt;/td>
+                    &lt;td>{last_month_income}&lt;/td>
+                &lt;/tr>
+            )
+        });
+    };
+
+    componentDidUpdate(prevProps) {
+        const {companies} = this.props;
+        if(companies !== prevProps.companies) {
+            this.setState({
+                page: 1
+            })
+        }
+    }
+
+    render() {
+        const {companies, dataSort} = this.props;
+        if (!this.props.companies) {
+            return (
+                &lt;h1 id='data-loading'>Data loading ...&lt;/h1>
+            )
+        }
+        else {
+            return (
+                &lt;section className="mainTable flex-box">
+                    &lt;table id="companies">
+                        &lt;thead>
+                        &lt;tr>
+                            &lt;th onClick={e => dataSort(e, 'id')}>id&lt;/th>
+                            &lt;th onClick={e => dataSort(e, 'name')}>Name&lt;/th>
+                            &lt;th onClick={e => dataSort(e, 'city')}>City&lt;/th>
+                            &lt;th onClick={e => dataSort(e, 'total_income')}>Total income&lt;/th>
+                            &lt;th onClick={e => dataSort(e, 'average_income')}>Average income&lt;/th>
+                            &lt;th onClick={e => dataSort(e, 'last_month_income')}>Last month income&lt;/th>
+                        &lt;/tr>
+                        &lt;/thead>
+                        &lt;tbody>
+                            {this.createTableContent(this.getActualPageContent(companies))}
+                        &lt;/tbody>
+                    &lt;/table>
+                    &lt;div className='pageNumbers'>
+                        {this.getPages(companies).map(el => &lt;button key={el} onClick={e => this.pagesButtonHandler(e, el)} className={ this.state.page === el ? 'activeButton': '' }>{el}&lt;/button>)}
+                    &lt;/div>
+                &lt;/section>
+            )
+        }
+    }
+}
+
+export default Table;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="App.html">App</a></li><li><a href="Header.html">Header</a></li><li><a href="MainField.html">MainField</a></li><li><a href="Table.html">Table</a></li></ul><h3>Global</h3><ul><li><a href="global.html#countAverageIncome">countAverageIncome</a></li><li><a href="global.html#countLastMonthIncome">countLastMonthIncome</a></li><li><a href="global.html#countTotalIncome">countTotalIncome</a></li><li><a href="global.html#Footer">Footer</a></li><li><a href="global.html#getCompaniesIncome">getCompaniesIncome</a></li><li><a href="global.html#getDataFromAPI">getDataFromAPI</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Sun Apr 19 2020 10:53:13 GMT+0200 (GMT+02:00)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -18,7 +18,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "docs": "jsdoc -c jsdoc.conf.json"
+    "jsdoc": "jsdoc -d docs/frontend -r src/"
   },
   "eslintConfig": {
     "extends": "react-app"

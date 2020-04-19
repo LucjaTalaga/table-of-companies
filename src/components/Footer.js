@@ -1,5 +1,8 @@
 import React from 'react';
 
+/**
+ * A footer of application with basic data and link to repository with this project
+ */
 function Footer() {
     return (
         <footer className='flex-box'>

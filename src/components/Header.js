@@ -1,5 +1,8 @@
 import React, {Component} from "react";
 
+/**
+ * A header for application, where you can filter your data
+ */
 class Header extends Component{
 
     state = {
@@ -8,7 +11,8 @@ class Header extends Component{
     };
     /**
      * changes the chosen value in select, by which the data will be filtered
-     * @param   {string} e  event
+     * @method
+     * @param {string} e event
      */
     changeHandler = (e) => {
         this.setState({
@@ -16,17 +20,32 @@ class Header extends Component{
         })
     };
 
+    /**
+     * changes the typed phrase in select, by which the data will be filtered
+     * @method
+     * @param {string} e event
+     */
     inputHandler = (e) => {
         this.setState({
             searchedPhrase: e.target.value
         })
     };
 
+    /**
+     * method that is launched when handler is submitted, passes values to function in App component
+     * @method
+     * @param {string} e event
+     */
     headerSubmitHandler = (e) => {
         e.preventDefault();
         this.props.whatToSearch(this.state.selectedOption, e.target.name.value);
     };
 
+    /**
+     * function that sets searched phrase to an empty string
+     * @method
+     * @param {event} e event
+     */
     clearButtonHandler = (e) => {
         this.setState({
             searchedPhrase: ''
